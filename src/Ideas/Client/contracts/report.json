@@ -1,0 +1,20 @@
+[
+    {
+        "BusinessName" : "Halo Works",
+        "Status" : "Success",
+        "Date" : "11/03/2017",
+        "StatusDescription" : "Success Description"
+    },
+    {
+        "BusinessName" : "Indigo IT Ltd",
+        "Status" : "Error",
+        "Date" : "11/03/2017",
+        "StatusDescription" : "Error/Warning Description"
+    },
+    {
+        "BusinessName" : "Peter Parker Ltd",
+        "Status" : "Error",
+        "Date" : "12/03/2017",
+        "StatusDescription" : "Error/Warning Description"
+    }
+]
