@@ -72,8 +72,7 @@ const updateIdeaSuccess  = (state, payload) => {
     return { ...state, messages, isUpdatingIdea: false, newlySavedIdeaId : payload.updatedIdea.id};
 }
 
-const updateIdeaFailed  = (state, payload) => {  
-  debugger
+const updateIdeaFailed  = (state, payload) => { 
     let errors = state.errors;  
     errors = errors.push(payload.message);
     return { ...state, errors, isUpdatingIdea: false };

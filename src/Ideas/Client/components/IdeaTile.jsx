@@ -4,7 +4,6 @@ import { Segment, Header, Icon, Button } from 'semantic-ui-react';
 import { Formats } from 'main/Utils/DateTime';
 
 const IdeaTile = (props) => {
-    console.log(props)
     function over(e){
         //e.target.style.backgroundColor="red";
         //console.log(e.target)
