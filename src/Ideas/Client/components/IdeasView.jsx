@@ -29,23 +29,26 @@ class IdeasView extends Component {
         const newestIdeaId = this.props.ideas.newestIdeaId;
         return (
             <div className='ideas-container'>
-                <h2>Ideas/Memo Board</h2>
-                <Segment loading={this.props.ideas.isFetchingIdeas} >
-                
-                <Button onClick={() => this.props.addIdea()} >
-                    <Icon name='cancel' />
-                    Add New Idea                    
-                </Button>
+                <Segment loading={this.props.ideas.isFetchingIdeas} textAlign='center' >                
+                    <Button onClick={() => this.props.addIdea()} >
+                        <Icon name='plus' />
+                        Add New Idea                    
+                    </Button>
                 </Segment>
                 
                 <Grid className=''  >
                 {
-                  ideaList && ideaList.length > 0 && ideaList.map((idea) => {
-                      console.log(idea);
-                      console.log('newestIdeaId = ' + newestIdeaId + '; idea.id :' + idea.id)
-                      const tile = (idea.id === newestIdeaId) 
-                                    ? <EditableIdeaTile key={`tile-${idea.id}`}  {...idea} />
-                                    : <IdeaTile key={`tile-${idea.id}`} {...idea} />
+                  ideaList && ideaList.toArray().map((idea, index) => {
+                      const tile = <EditableIdeaTile 
+                                            key={`tile-${idea.id}`}  
+                                            {...idea} 
+                                            index={index}
+                                            hasFocus = {idea.id === newestIdeaId}
+                                            deleteIdea={this.props.deleteIdea}
+                                            changeIdeaTitle = {this.props.changeIdeaTitle}
+                                            changeIdeaBody = {this.props.changeIdeaBody}
+                                            updateIdea={this.props.updateIdea}
+                                        />
                       return tile;
                   })
                 }
@@ -53,19 +56,19 @@ class IdeasView extends Component {
                 { this.props.ideas.errors.size > 0 &&
                 <Message
                     attached
-                    onDismiss={this.props.onClearReportErrors}
+                    onDismiss={this.props.onClearErrors}
                     negative
                     icon='warning'
                     list={this.props.ideas.errors.toArray()}
                     />
                 }
-                { this.props.ideas.warnings.size > 0 &&
+                { this.props.ideas.messages.size > 0 &&
                 <Message
                     attached
-                    onDismiss={this.props.onClearReportWarnings}
+                    onDismiss={this.props.onClearMessages}
                     warning
                     icon='info'
-                    list={this.props.ideas.warnings.toArray()}
+                    list={this.props.ideas.messages.toArray()}
                     />
                 }
             </div>

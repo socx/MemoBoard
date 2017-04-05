@@ -1,25 +1,25 @@
 import { combineReducers }  from 'redux';
 import { createReducer }    from 'main/Utils';
 import * as constants       from './constants';
-import { List, Map }        from 'immutable';
+import { List, Map, fromJS }        from 'immutable';
 
 export const initialState = Object.assign({}, {
-    isFetchingReport: false,
-    warnings: List(),
+    messages: List(),
     errors: List(),
     isFetchingIdeas : false,
-    ideaList: [],
-    newestIdeaId : null
+    isAddingIdea : false,
+    isUpdatingIdea : false,
+    isDeletingIdea : false,
+    ideaList: List(),
+    newestIdeaId : null,
+    newlySavedIdeaId : null
 });
 
 // reducer functions
-const getIdeas  = (state, payload) => {
-    return { ...state, errors : List(), isFetchingIdeas: true };
-}
-
 const getIdeasSuccess  = (state, payload) => {  
     const errors = List();
-    return { ...state, errors, isFetchingIdeas: false , ideaList : payload.ideas};
+    const ideaList = payload.ideas && payload.ideas.length > 0 ? List(payload.ideas) : List();    
+    return { ...state, errors, isFetchingIdeas: false , ideaList};
 }
 
 const getIdeasFailed  = (state, payload) => {  
@@ -28,63 +28,89 @@ const getIdeasFailed  = (state, payload) => {
     return { ...state, errors, isFetchingIdeas: false };
 }
 
-const addIdea  = (state, payload) => {
-    return { ...state, errors : List(), isFetchingIdeas: true };
-}
-
-const addIdeaSuccess  = (state, payload) => {  
-    const errors = List();
-    let ideaList = state.ideaList;
-    ideaList.push(payload)
-    return { ...state, errors , ideaList, isFetchingIdeas: false, newestIdeaId : payload.id};
+const addIdeaSuccess  = (state, payload) => {
+    const ideaList = state.ideaList.push({id: payload.id, created_date : payload.created_date, title : '', body:'' });
+    return { ...state, ideaList, isAddingIdea: false, newestIdeaId : payload.id};
 }
 
 const addIdeaFailed  = (state, payload) => {  
     let errors = state.errors;  
     errors = errors.push(payload);
-    return { ...state, errors, isFetchingIdeas: false };
+    return { ...state, errors, isAddingIdea: false };
 }
 
-/////////////////////
-
-const getReportEmpty = (state, payload) => {
-  const warning = `${payload.reportType} report was processed successfully but has no data.`;
-  const warnings = state.warnings.push(warning);
-  return { ...state, warnings, isFetchingReport: false };
-};
-
-const getReportFailed = (state, payload) => {
-  const errors = state.errors.push('Error processing report');
-  return { ...state, errors, isFetchingReport: false }
+const deleteIdeaSuccess  = (state, payload) => {
+    const ideaList = state.ideaList.delete(payload.indexToDelete);
+    return { ...state, ideaList, isDeletingIdea: false};
 }
 
-const clearReportErrors = (state) => {
+const deleteIdeaFailed  = (state, payload) => {  
+    let errors = state.errors;  
+    errors = errors.push(payload);
+    return { ...state, errors, isDeletingIdea: false };
+}
+
+const changeIdeaTitle = (state, payload) => {
+    let ideaList = state.ideaList;
+    let ideaToChange = ideaList.get(payload.indexToChange);
+    ideaToChange['title'] =payload.newTitle;
+    ideaList = ideaList.set(payload.indexToChange, ideaToChange);
+    return {...state, ideaList}
+}
+
+const changeIdeaBody = (state, payload) => {
+    let ideaList = state.ideaList;
+    let ideaToChange = ideaList.get(payload.indexToChange);
+    ideaToChange['body'] =payload.newBody;
+    ideaList = ideaList.set(payload.indexToChange, ideaToChange);
+    return {...state, ideaList}
+}
+
+const updateIdeaSuccess  = (state, payload) => {
+    let messages = state.messages;  
+    messages = messages.push(payload.message);
+    return { ...state, messages, isUpdatingIdea: false, newlySavedIdeaId : payload.updatedIdea.id};
+}
+
+const updateIdeaFailed  = (state, payload) => {  
+  debugger
+    let errors = state.errors;  
+    errors = errors.push(payload.message);
+    return { ...state, errors, isUpdatingIdea: false };
+}
+
+const clearErrors = (state) => {
   const errors = List();
   return { ...state, errors }
 }
 
-const clearReportWarnings = (state) => {
-  const warnings = List();
-  return { ...state, warnings}
+const clearMessages = (state) => {
+  const messages = List();
+  return { ...state, messages}
 }
 
 const reducerMap = {
-  [constants.GET_IDEAS]: (state, payload) => getIdeas(state, payload),
+  [constants.GET_IDEAS]: (state, payload) => ({ ...state, isFetchingIdeas: true }),
   [constants.GET_IDEAS_SUCCESS]: (state, payload) => getIdeasSuccess(state, payload),
   [constants.GET_IDEAS_FAILED]: (state, payload) => getIdeasFailed(state, payload),
-  [constants.ADD_IDEA]: (state, payload) => addIdea(state, payload),
+  
+  [constants.ADD_IDEA]: (state, payload) =>  ({ ...state, isAddingIdea: true }),
   [constants.ADD_IDEA_SUCCESS]: (state, payload) => addIdeaSuccess(state, payload),
   [constants.ADD_IDEA_FAILED]: (state, payload) => addIdeaFailed(state, payload),
 
-  [constants.GET_REPORT]: (state, payload) => Object.assign({}, state, { isFetchingReport: true }),
-  [constants.GET_REPORT_SUCCESS]: (state, payload) => Object.assign({}, state, { isFetchingReport: false }),
-  [constants.GET_REPORT_EMPTY]: (state, payload) => getReportEmpty(state, payload),  
-  [constants.GET_REPORT_FAILED]: (state, payload) => getReportFailed(state, payload),  
-  [constants.CLEAR_REPORT_ERRORS]: (state, payload) => clearReportErrors(state),  
-  [constants.CLEAR_REPORT_WARNINGS]: (state, payload) => clearReportWarnings(state),
-  [constants.UPDATE_COMING_SOON_HOURS]: (state, payload) => clearReportWarnings(state),
-  [constants.UPDATE_COMING_SOON_HOURS_SUCCESS]: (state, payload) => clearReportWarnings(state),
-  [constants.UPDATE_COMING_SOON_HOURS_FAILURE]: (state, payload) => clearReportWarnings(state),
+  [constants.DELETE_IDEA]: (state, payload) =>  ({ ...state, isDeletingIdea: true }),
+  [constants.DELETE_IDEA_SUCCESS]: (state, payload) => deleteIdeaSuccess(state, payload),
+  [constants.DELETE_IDEA_FAILED]: (state, payload) => deleteIdeaFailed(state, payload),
+
+  [constants.CHANGE_IDEA_TITLE] : (state, payload) => changeIdeaTitle(state, payload),
+  [constants.CHANGE_IDEA_BODY] : (state, payload) => changeIdeaBody(state, payload),
+
+  [constants.UPDATE_IDEA]: (state, payload) => ({ ...state, isUpdatingIdea: true }),
+  [constants.UPDATE_IDEA_SUCCESS]: (state, payload) => updateIdeaSuccess(state, payload),
+  [constants.UPDATE_IDEA_FAILED]: (state, payload) => updateIdeaFailed(state, payload),
+
+  [constants.CLEAR_ERRORS]: (state, payload) => clearErrors(state),
+  [constants.CLEAR_MESSAGES]: (state, payload) => clearMessages(state)
 }
 
 
