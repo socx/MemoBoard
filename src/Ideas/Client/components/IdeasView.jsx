@@ -1,12 +1,10 @@
-import React, { Component }                 from 'react';
-import { connect }                          from 'react-redux';
-import { bindActionCreators }               from 'redux';
-import { Segment, Icon, Message, Menu, Button, Grid}      from 'semantic-ui-react';
+import React, { Component }                         from 'react';
+import { connect }                                  from 'react-redux';
+import { bindActionCreators }                       from 'redux';
+import { Segment, Icon, Message, Button, Grid}      from 'semantic-ui-react';
 
-import * as actions                         from '../store/actionCreators';
-import IdeaTile                             from './IdeaTile';
-import EditableIdeaTile                     from './EditableIdeaTile';
-
+import * as actions                                 from '../store/actionCreators';
+import EditableIdeaTile                             from './EditableIdeaTile';
 
 
 const mapStateToProps = (state) => ({

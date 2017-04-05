@@ -4,9 +4,19 @@ import { Segment, Header, Icon, Button } from 'semantic-ui-react';
 import { Formats } from 'main/Utils/DateTime';
 
 const EditableIdeaTile = (props) => {
+    
+    function over(e){
+        //e.target.style.backgroundColor="red";
+        //console.log(e.target)
+    }
+    
+    function out(e){
+        //e.target.style.backgroundColor='';
+    }
+
     const charactersRemaining = (140 - props.body.length);
     return (
-        <Segment className={`idea-tile ${props.justSaved ? 'saved' : ''}`} >
+        <Segment className={`idea-tile ${props.justSaved ? 'saved' : ''}`} onMouseOver={over} onMouseOut={out} >
             <div className='title'>
                 <input className='' type='text' maxLength={15} size={14} autoFocus={props.hasFocus} 
                     value={props.title} 
