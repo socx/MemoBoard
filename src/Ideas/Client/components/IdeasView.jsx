@@ -26,7 +26,6 @@ class IdeasView extends Component {
     
     render() {
         const ideaList = this.props.ideas.ideaList;
-        const newestIdeaId = this.props.ideas.newestIdeaId;
         return (
             <div className='ideas-container'>
                 <Segment loading={this.props.ideas.isFetchingIdeas} textAlign='center' >                
@@ -43,7 +42,8 @@ class IdeasView extends Component {
                                             key={`tile-${idea.id}`}  
                                             {...idea} 
                                             index={index}
-                                            hasFocus = {idea.id === newestIdeaId}
+                                            hasFocus = {idea.id === this.props.ideas.newestIdeaId}
+                                            justSaved = {idea.id === this.props.ideas.newlySavedIdeaId}
                                             deleteIdea={this.props.deleteIdea}
                                             changeIdeaTitle = {this.props.changeIdeaTitle}
                                             changeIdeaBody = {this.props.changeIdeaBody}
@@ -60,15 +60,6 @@ class IdeasView extends Component {
                     negative
                     icon='warning'
                     list={this.props.ideas.errors.toArray()}
-                    />
-                }
-                { this.props.ideas.messages.size > 0 &&
-                <Message
-                    attached
-                    onDismiss={this.props.onClearMessages}
-                    warning
-                    icon='info'
-                    list={this.props.ideas.messages.toArray()}
                     />
                 }
             </div>

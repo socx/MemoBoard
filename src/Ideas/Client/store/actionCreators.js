@@ -111,22 +111,25 @@ export const deleteIdea = (index) => async (dispatch, getState) => {
 } 
 
 export const changeIdeaTitle = (indexToChange, newTitle) => async (dispatch, getState) => {
-    dispatch({
-        type : constants.CHANGE_IDEA_TITLE, 
-        payload : { indexToChange, newTitle} 
-    });
+    if(newTitle.length <= 140) {
+        dispatch({
+            type : constants.CHANGE_IDEA_TITLE, 
+            payload : { indexToChange, newTitle} 
+        });
+    }
 }
 
 export const changeIdeaBody = (indexToChange, newBody) => async (dispatch, getState) => {
-    dispatch({
-        type : constants.CHANGE_IDEA_BODY, 
-        payload : { indexToChange, newBody} 
-    });
+    if(newBody.length <= 140) {
+        dispatch({
+            type : constants.CHANGE_IDEA_BODY, 
+            payload : { indexToChange, newBody} 
+        });
+    }
 }
 
 
 export const updateIdea = (indexToUpdate) => async (dispatch, getState) => {
-    dispatch({type : constants.CLEAR_MESSAGES});
     dispatch({type : constants.CLEAR_ERRORS});
     dispatch({type : constants.UPDATE_IDEA});
     try{

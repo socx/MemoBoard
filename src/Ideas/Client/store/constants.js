@@ -18,6 +18,5 @@ export const  CHANGE_IDEA_TITLE ='CHANGE_IDEA_TITLE';
 export const  CHANGE_IDEA_BODY ='CHANGE_IDEA_BODY';
 
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
-export const CLEAR_MESSAGES = 'CLEAR_MESSAGES';
 
 

@@ -28,6 +28,10 @@ body, .ui.header{
     }
 }
 
+.hidden {
+    display: none;
+}
+
 .idea-tile{
     width: 150px !important;
     height: 150px !important;
@@ -49,6 +53,13 @@ body, .ui.header{
     }
     .body {
         height: 70px;
+        margin-bottom: 5px;
+    }
+    .character-count {
+        font-style: italic;
+        color: #ccc;
+        font-size: .75rem;
+        float: right;    
     }
     .created-date {
         font-style: italic;
@@ -82,8 +93,18 @@ body, .ui.header{
         box-sizing: border-box;
         border: 1px solid #888 !important;
     }
+}    
+
+.saved {
+    border-color: #0f851a !important;
+    box-shadow: 5px 5px rgba(0,0,0,0.15) !important;
+    transition: box-shadow 0.3s ease-in-out !important;
 }
 
+.error {
+    border-color: #cc0000 !important;
+    box-shadow: 10px 10px 5px #888888;
+}
 /*
 .ideaList {
     border: 1px solid rgba(34,36,38,.15) !important;

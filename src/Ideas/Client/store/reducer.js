@@ -4,7 +4,6 @@ import * as constants       from './constants';
 import { List, Map, fromJS }        from 'immutable';
 
 export const initialState = Object.assign({}, {
-    messages: List(),
     errors: List(),
     isFetchingIdeas : false,
     isAddingIdea : false,
@@ -67,25 +66,13 @@ const changeIdeaBody = (state, payload) => {
 }
 
 const updateIdeaSuccess  = (state, payload) => {
-    let messages = state.messages;  
-    messages = messages.push(payload.message);
-    return { ...state, messages, isUpdatingIdea: false, newlySavedIdeaId : payload.updatedIdea.id};
+    return { ...state, isUpdatingIdea: false, newlySavedIdeaId : payload.updatedIdea.id};
 }
 
 const updateIdeaFailed  = (state, payload) => { 
     let errors = state.errors;  
     errors = errors.push(payload.message);
     return { ...state, errors, isUpdatingIdea: false };
-}
-
-const clearErrors = (state) => {
-  const errors = List();
-  return { ...state, errors }
-}
-
-const clearMessages = (state) => {
-  const messages = List();
-  return { ...state, messages}
 }
 
 const reducerMap = {
@@ -108,8 +95,7 @@ const reducerMap = {
   [constants.UPDATE_IDEA_SUCCESS]: (state, payload) => updateIdeaSuccess(state, payload),
   [constants.UPDATE_IDEA_FAILED]: (state, payload) => updateIdeaFailed(state, payload),
 
-  [constants.CLEAR_ERRORS]: (state, payload) => clearErrors(state),
-  [constants.CLEAR_MESSAGES]: (state, payload) => clearMessages(state)
+  [constants.CLEAR_ERRORS]: (state, payload) => ({ ...state, errors : List() })
 }
 
 
